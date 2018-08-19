@@ -7,29 +7,31 @@
 library(data.table)
 library(igraph)
 library(netresponse)
+library(tibble)
+library(dplyr)
 
 # load data ----
 load("~/Documents/Disciplines/Fujita/int/data/train_test_sets_dengue.Rdata")
 g <- read.sif(sif.file = './int/data/dengue_na/subnetwork1.sif', format = 'igraph')
-
-# process data ---
-edgelist <- as.data.frame(as_edgelist(g, names = TRUE))
-
 bla <- read.csv('./int/data/dengue_train_upregulated_list')
 bla <- bla$hgnc_symbol
 degs <- read.csv('./int/data/dengue_train_upregulated')
 
+
+# process data ---
+edgelist <- as.data.frame(as_edgelist(g, names = TRUE))
+
+# atrtribute weigths for different links
 edgelist$weight <- ifelse((edgelist$V1 %in% bla & edgelist$V2 %in% bla), 4,1)
 edgelist$weight[xor(edgelist$V1 %in% bla, edgelist$V2 %in% bla)] <- 2
 
 g <- graph.data.frame(edgelist)
 
 gene_candidates <- as.data.frame(strength(g))
-library(tibble)
 
 gene_candidates <- rownames_to_column(gene_candidates, var = 'gene')
-library(dplyr)
 
+# 
 gene_candidates <- gene_candidates %>%
                   filter(!(gene %in% bla))
 

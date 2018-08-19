@@ -4,10 +4,9 @@
 #df <- read.csv('./int/data/dengue_train_upregulated')
 
 library('biomaRt')
-ensg_to_gene_symbol <- function(df){
+ensg_to_gene_symbol <- function(ensg_vector){
 mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
-genes <- df$gene
-df$id <- NA
+genes <-ensg_vector
 G_list <- getBM(filters= "ensembl_gene_id", attributes= c("ensembl_gene_id",
                                                           "entrezgene", "hgnc_symbol", "description"),values=genes,mart= mart)
 glist <- as.data.frame(G_list)
