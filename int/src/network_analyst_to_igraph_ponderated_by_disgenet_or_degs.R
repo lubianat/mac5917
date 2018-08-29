@@ -41,4 +41,4 @@ gene_candidates_top <- gene_candidates %>%
 
 write.csv(gene_candidates_top, file = './int/data/gene_candidates_top_dengue')
 
-plot(g, layout_in_circle(g)  )
+save('g', file = './int/results/igraph_dengue.Rdata')
