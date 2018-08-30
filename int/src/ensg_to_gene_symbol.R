@@ -3,16 +3,12 @@
 
 #df <- read.csv('./int/data/dengue_train_upregulated')
 
-library('biomaRt')
-ensg_to_gene_symbol <- function(ensg_vector){
-mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
-genes <-ensg_vector
-G_list <- getBM(filters= "ensembl_gene_id", attributes= c("ensembl_gene_id",
-                                                          "entrezgene", "hgnc_symbol", "description"),values=genes,mart= mart)
-glist <- as.data.frame(G_list)
+library(biomaRt)
+ensembl = useEnsembl(biomart="ensembl", dataset="hsapiens_gene_ensembl")
+chr1_genes <- getBM(attributes=c('ensembl_gene_id',
+                                   'ensembl_transcript_id','hgnc_symbol','chromosome_name','start_position','end_position'), filters =
+                        'chromosome_name', values ="1", mart = ensembl)
 
-return(glist)
-}
-
+head(chr1_gene)
 
 # write.csv(x = glist, file = './int/data/dengue_train_upregulated_list')
